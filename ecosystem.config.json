@@ -1,0 +1,19 @@
+{
+  "apps": [
+    {
+      "name": "parsers",
+      "script": "./build/index.js",
+      "out_file": "./logs/parsers.log",
+      "error_file": "./logs/parsers.err",
+      "log_file": "./logs/parsers.combined",
+      "merge_logs": true,
+      "time": true,
+      "timestamp": "YYYY-MM-DD HH:mm",
+      "env_production": {
+        "NODE_ENV": "production"
+      },
+      "instances": 0,
+      "exec_mode": "cluster"
+    }
+  ]
+}
