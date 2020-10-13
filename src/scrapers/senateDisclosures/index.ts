@@ -2,7 +2,10 @@ import cheerio, { html } from "cheerio";
 import moment from "moment";
 import puppeteer from "puppeteer";
 import { capitalize, clean } from "../../util";
-import { SenateStockDisclosure, SenateStockDisclosureModel } from "../../types";
+import {
+  SenateStockDisclosure,
+  SenateStockDisclosureModel,
+} from "../../types/SenateStockDisclosure";
 
 const fetchContracts = async (
   url: string,
