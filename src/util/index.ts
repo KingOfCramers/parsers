@@ -9,6 +9,11 @@ export const chunk = function (size: number, arr: string[]) {
   return result;
 };
 
+export const sleep = (ms: number) =>
+  new Promise((resolve) => {
+    setTimeout(() => resolve(), ms);
+  });
+
 // Executes a shell command and returns a promise (or rejects with error)
 export const execShellCommand = (
   cmd: string,

@@ -4,7 +4,11 @@ import { chunk } from "./util";
 import { resolve } from "path";
 import dotenv from "dotenv";
 import { connect } from "./mongodb/connect";
-import { senateDisclosures, statePressReleases } from "./scrapers";
+import {
+  senateDisclosures,
+  statePressReleases,
+  getNewStatePressReleases,
+} from "./scrapers";
 import { setupPuppeteer } from "./scrapers/puppeteer";
 import { crsReports } from "./rss/crsReports";
 
@@ -17,6 +21,7 @@ const runProgram = async () => {
   //await crsReports();
   //await senateDisclosures(browser);
   await statePressReleases();
+  //await getNewStatePressReleases();
   await db.close();
 };
 
