@@ -42,8 +42,8 @@ const parseReleaseStrings = ($: cheerio.Root): string[] => {
 };
 
 // 693 pages.
-
-const pageNumbers = Array.from({ length: 658 }, (x, i) => i + 35);
+//const pageNumbers = Array.from({ length: 243 }, (x, i) => i + 450);
+const pageNumbers = Array.from({ length: 693 }, (x, i) => i);
 
 export const statePressReleases = async () => {
   for (const pageNumber of pageNumbers) {

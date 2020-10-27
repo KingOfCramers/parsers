@@ -5,7 +5,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev:start": "NODE_ENV=development ts-node ./src/index.ts",
+    "dev:start": "nodemon",
     "dev:debug": "tsc && NODE_ENV=development node --inspect-brk build/index.js",
     "prod:build": "tsc",
     "prod:deploy": "tsc && scp -r ./build",
