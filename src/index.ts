@@ -16,11 +16,11 @@ const envi = process.env.NODE_ENV;
 dotenv.config({ path: resolve(__dirname, `../.${envi}.env`) });
 
 const runProgram = async () => {
-  //const browser = await setupPuppeteer({ kind: null });
+  const browser = await setupPuppeteer({ kind: null });
   const db = await connect();
   //await crsReports();
-  //await senateDisclosures(browser);
-  await statePressReleases();
+  await senateDisclosures(browser);
+  //await statePressReleases();
   //await getNewStatePressReleases();
   await db.close();
 };

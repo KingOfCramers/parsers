@@ -2,10 +2,8 @@ import cheerio, { html } from "cheerio";
 import moment from "moment";
 import puppeteer from "puppeteer";
 import { capitalize, clean } from "../../util";
-import {
-  SenateStockDisclosure,
-  SenateStockDisclosureModel,
-} from "../../types/SenateStockDisclosure";
+import { SenateStockDisclosure } from "../../types/SenateStockDisclosure";
+import { Saver } from "../../mongodb/Saver";
 
 const fetchContracts = async (
   url: string,
@@ -67,17 +65,9 @@ export const senateDisclosures = async (browser: puppeteer.Browser) => {
 
   const $ = cheerio.load(html);
   const data = parseData($);
-  const promisedInsertsAndUpdates = data.map(async (datum) => {
-    const doc = await SenateStockDisclosureModel.findOne({ link: datum.link });
-    if (!doc) {
-      const newDoc = new SenateStockDisclosureModel({ ...datum });
-      return await newDoc.save();
-    } else {
-      doc.set({ ...datum });
-      return await doc.save();
-    }
-  });
-
-  // Once all promises have resolved (if data was new or not) then finish.
-  await Promise.all(promisedInsertsAndUpdates);
+  const disclosureSaver = new Saver<SenateStockDisclosure>(
+    data,
+    SenateStockDisclosure
+  );
+  await disclosureSaver.save();
 };
