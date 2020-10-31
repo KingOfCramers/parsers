@@ -1,8 +1,11 @@
 import cheerio, { html } from "cheerio";
 import moment from "moment";
 import puppeteer from "puppeteer";
-import { capitalize, clean } from "../../util";
-import { SenateStockDisclosure } from "../../types/SenateStockDisclosure";
+import { capitalize, clean, wait } from "../../util";
+import {
+  SenateStockDisclosure,
+  StockDisclosure,
+} from "../../types/SenateStockDisclosure";
 import { Saver } from "../../mongodb/Saver";
 
 const fetchContracts = async (
@@ -26,17 +29,17 @@ const fetchContracts = async (
     page.waitForResponse("https://efdsearch.senate.gov/search/report/data/"),
   ]);
 
-  await page.waitFor(1000);
+  await wait(1000);
 
   let html = await page.content();
   return html;
 };
 
-const parseData = ($: cheerio.Root): SenateStockDisclosure[] => {
+const parseData = ($: cheerio.Root): StockDisclosure[] => {
   const trs = $(".table-striped tr[role='row']");
   const trsWithoutHeader = Array.from(trs.slice(1, trs.length));
   const linkBase = "https://efdsearch.senate.gov";
-  const data: SenateStockDisclosure[] = trsWithoutHeader.map((x) => {
+  const data: StockDisclosure[] = trsWithoutHeader.map((x) => {
     // EDIT -- This shouldn't return an empty string
     const link = $(x).find("a").attr("href")
       ? linkBase + $(x).find("a").attr("href")
@@ -65,6 +68,6 @@ export const senateDisclosures = async (browser: puppeteer.Browser) => {
 
   const $ = cheerio.load(html);
   const data = parseData($);
-  const saver = new Saver<SenateStockDisclosure>(data, SenateStockDisclosure);
+  const saver = new Saver<StockDisclosure>(data, SenateStockDisclosure);
   await saver.saveOrUpdate();
 };

@@ -2,21 +2,21 @@ import { InputType, Field } from "type-graphql";
 import { getModelForClass, prop, post, pre } from "@typegoose/typegoose";
 import mongoose from "mongoose";
 
-export interface StockDisclosure {
+export type Report = {
+  title: string;
   link: string;
-  firstName: string;
-  lastName: string;
   date: Date;
-}
+  id: string;
+};
 
 // Used to query for committees
 @InputType()
-@post<StockDisclosure>("save", function (doc: mongoose.Document & any, next) {
+@post<Report>("save", function (doc: mongoose.Document & any, next) {
   if (doc.wasNew) {
     console.log(`Document saved with id ${doc._id}`);
   }
 })
-@post<StockDisclosure>("save", function (
+@post<Report>("save", function (
   err: mongoose.Error,
   doc: mongoose.Document,
   next: any
@@ -24,24 +24,20 @@ export interface StockDisclosure {
   console.log("Document could not save: ", err.message);
   next();
 })
-export class SenateStockDisclosure {
-  @Field({ nullable: true })
-  @prop({ required: false, unique: true })
+export class CrsReport {
+  @Field()
+  @prop({ required: true, unique: true })
   link: string;
 
   @Field()
   @prop({ required: true })
-  firstName: string;
+  title: string;
 
   @Field()
   @prop({ required: true })
-  lastName: string;
+  id: string;
 
   @Field()
   @prop({ required: true })
   date: Date;
 }
-
-export const SenateStockDisclosureModel = getModelForClass(
-  SenateStockDisclosure
-);

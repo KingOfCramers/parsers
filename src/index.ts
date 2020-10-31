@@ -19,7 +19,7 @@ const runProgram = async () => {
   const browser = await setupPuppeteer({ kind: null });
   const db = await connect();
   await crsReports();
-  //await senateDisclosures(browser);
+  await senateDisclosures(browser);
   //await statePressReleases();
   //await getNewStatePressReleases();
   await db.close();

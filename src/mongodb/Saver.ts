@@ -19,6 +19,7 @@ export class Saver<T extends DataType> {
         new: true,
         upsert: true,
         rawResult: true, // Return the raw result from the MongoDB driver
+        useFindAndModify: false,
       });
     });
 

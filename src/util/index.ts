@@ -47,3 +47,6 @@ export const capitalize = (str: string, lower = false): string =>
 
 export const clean = (item: string): string =>
   item ? item.replace(/\s\s+/g, " ").trim() : "";
+
+export const wait = (ms: number): Promise<void> =>
+  new Promise((resolve) => setTimeout(resolve, ms));
