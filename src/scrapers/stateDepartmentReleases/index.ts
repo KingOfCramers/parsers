@@ -3,7 +3,7 @@ import moment from "moment";
 import typegoose from "@typegoose/typegoose";
 import axios, { AxiosResponse } from "axios";
 import util from "util";
-import { capitalize, clean, sleep } from "../../util";
+import { capitalize, clean, wait } from "../../util";
 import { StatePressReleaseModel, StatePressRelease } from "../../types";
 
 const parseData = (link: string, $: cheerio.Root): StatePressRelease => {
@@ -54,7 +54,7 @@ export const statePressReleases = async () => {
       const $ = cheerio.load(response.data);
       const links = parseReleaseStrings($);
       for (const sublink of links) {
-        await sleep(500);
+        await wait(500);
         //Get data from every sub-link
         try {
           const response = await axios.get(sublink);
