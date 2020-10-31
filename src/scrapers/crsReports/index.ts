@@ -10,7 +10,10 @@ interface Data {
 }
 // This function only runs once and sets up our puppeteer browser.
 export const crsReports = async () => {
-  await execShellCommand("python3", path.resolve(__dirname, "parser.py"))
+  await execShellCommand(
+    "pipenv run python3",
+    path.resolve(__dirname, "parser.py")
+  )
     .then((res) => {
       let rows: string[][] = chunk(4, res.split("\n"));
       let data: Data[] = rows

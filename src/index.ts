@@ -8,9 +8,9 @@ import {
   senateDisclosures,
   statePressReleases,
   getNewStatePressReleases,
+  crsReports,
 } from "./scrapers";
-import { setupPuppeteer } from "./scrapers/puppeteer";
-import { crsReports } from "./rss/crsReports";
+import { setupPuppeteer } from "./puppeteer";
 
 const envi = process.env.NODE_ENV;
 dotenv.config({ path: resolve(__dirname, `../.${envi}.env`) });
@@ -18,8 +18,8 @@ dotenv.config({ path: resolve(__dirname, `../.${envi}.env`) });
 const runProgram = async () => {
   const browser = await setupPuppeteer({ kind: null });
   const db = await connect();
-  //await crsReports();
-  await senateDisclosures(browser);
+  await crsReports();
+  //await senateDisclosures(browser);
   //await statePressReleases();
   //await getNewStatePressReleases();
   await db.close();

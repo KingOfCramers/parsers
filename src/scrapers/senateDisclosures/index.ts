@@ -65,9 +65,6 @@ export const senateDisclosures = async (browser: puppeteer.Browser) => {
 
   const $ = cheerio.load(html);
   const data = parseData($);
-  const disclosureSaver = new Saver<SenateStockDisclosure>(
-    data,
-    SenateStockDisclosure
-  );
-  await disclosureSaver.save();
+  const saver = new Saver<SenateStockDisclosure>(data, SenateStockDisclosure);
+  await saver.saveOrUpdate();
 };

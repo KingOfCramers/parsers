@@ -12,7 +12,7 @@ export class Saver<T extends DataType> {
     const model = getModelForClass(dataClass);
     this.model = model;
   }
-  async save(): Promise<void> {
+  async saveOrUpdate(): Promise<void> {
     console.log(`Saving documents for ${this.model.modelName}`);
     const savedDocuments = this.data.map((datum) => {
       return this.model.findOneAndUpdate({ link: datum.link }, datum, {
