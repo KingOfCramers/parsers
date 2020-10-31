@@ -48,8 +48,8 @@ const parseData = ($: cheerio.Root): SenateStockDisclosure[] => {
     const lastName = clean(
       capitalize($(x).find("td:nth-child(2)").text(), true)
     );
-    const dateFiled = new Date($(x).find("td").last().text());
-    return { link, title, firstName, lastName, dateFiled };
+    const date = new Date($(x).find("td").last().text());
+    return { link, title, firstName, lastName, date };
   });
   return data;
 };

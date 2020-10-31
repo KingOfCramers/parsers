@@ -6,7 +6,7 @@ type StockDisclosure = {
   link: string;
   firstName: string;
   lastName: string;
-  dateFiled: Date;
+  date: Date;
 };
 
 // Used to query for committees
@@ -39,7 +39,7 @@ export class SenateStockDisclosure {
 
   @Field()
   @prop({ required: true })
-  dateFiled: Date;
+  date: Date;
 }
 
 export const SenateStockDisclosureModel = getModelForClass(
