@@ -28,7 +28,7 @@ import {
 } from "./types";
 
 // Jobs + Types
-import { HouseJob, house } from "./scrapers/houseCommittees/jobs";
+import { HouseJobTypes, house } from "./scrapers/houseCommittees/jobs";
 
 const runProgram = async () => {
   // Connect to our MongoDB database
@@ -53,7 +53,7 @@ const runProgram = async () => {
     getNewStatePressReleases
   );
 
-  const houseCommitteeQueue = new QueueHandler<HouseJob<{}>, Committee>(
+  const houseCommitteeQueue = new QueueHandler<HouseJobTypes, Committee>(
     "houseCommittees",
     houseCommittees
   );
@@ -68,13 +68,13 @@ const runProgram = async () => {
     await crsQueue.createJobs([{}], { retries: 1, timeout: 5000 });
     await houseCommitteeQueue.createJobs([...house], {
       retries: 1,
-      timeout: 10000,
+      timeout: 15000,
     });
   }, 5000);
 
-  crsQueue.process();
-  statePressReleasesQueue.process();
-  senateDisclosureQueue.process();
+  //crsQueue.process();
+  //statePressReleasesQueue.process();
+  //senateDisclosureQueue.process();
   houseCommitteeQueue.process();
 };
 

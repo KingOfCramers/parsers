@@ -12,11 +12,5 @@ export const setupPuppeteer = async (): Promise<puppeteer.Browser> => {
     args,
   });
 
-  //browser.on("disconnected", () => {
-  //console.log("Browser was disconnected.");
-  //});
-
-  //console.log("Configured puppeteer.");
-
   return browser;
 };

@@ -105,6 +105,13 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
+"@types/jquery@^3.5.4":
+  version "3.5.4"
+  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.5.4.tgz#e923f7d05ca790530f17f80a3b89bc28853fa17f"
+  integrity sha512-//9CHhaUt/rurMJTxGI+I6DmsNHgYU6d8aSLFfO5dB7+10lwLnaWT0z5GY/yY82Q/M+B+0Qh3TixlJ8vmBeqIw==
+  dependencies:
+    "@types/sizzle" "*"
+
 "@types/json-schema@^7.0.3":
   version "7.0.6"
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.6.tgz#f4c7ec43e81b319a9815115031709f26987891f0"
@@ -148,6 +155,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/random-useragent@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@types/random-useragent/-/random-useragent-0.3.0.tgz#5ac370302ec7fd996c1582b33266f1da7a793a29"
+  integrity sha512-K6yHeQCCJJBvHeW1akRxXC8GnADsXmoRA2UdVEYITzD88U8Vk3lX+0c0A27j3CrAiic2I961glcnwScc9vUtWg==
+
 "@types/redis@^2.8.28":
   version "2.8.28"
   resolved "https://registry.yarnpkg.com/@types/redis/-/redis-2.8.28.tgz#5862b2b64aa7f7cbc76dafd7e6f06992b52c55e3"
@@ -169,6 +181,11 @@
   version "7.3.4"
   resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.3.4.tgz#43d7168fec6fa0988bb1a513a697b29296721afb"
   integrity sha512-+nVsLKlcUCeMzD2ufHEYuJ9a2ovstb6Dp52A5VsoKxDXgvE051XgHI/33I1EymwkRGQkwnA0LkhnUzituGs4EQ==
+
+"@types/sizzle@*":
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/@types/sizzle/-/sizzle-2.3.2.tgz#a811b8c18e2babab7d542b3365887ae2e4d9de47"
+  integrity sha512-7EJYyKTL7tFR8+gDbB6Wwz/arpGa0Mywk1TJbNzKzHtzbwVmY4HR9WqS5VV7dsBUKQmPNr192jHr/VpBluj/hg==
 
 "@types/tough-cookie@*":
   version "4.0.0"
@@ -1195,6 +1212,11 @@ json-stable-stringify-without-jsonify@^1.0.1:
   resolved "https://registry.yarnpkg.com/json-stable-stringify-without-jsonify/-/json-stable-stringify-without-jsonify-1.0.1.tgz#9db7b59496ad3f3cfef30a75142d2d930ad72651"
   integrity sha1-nbe1lJatPzz+8wp1FC0tkwrXJlE=
 
+json-stringify-safe@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
+  integrity sha1-Epai1Y/UXxmg9s4B1lcB4sc1tus=
+
 kareem@2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/kareem/-/kareem-2.3.1.tgz#def12d9c941017fabfb00f873af95e9c99e1be87"
@@ -1542,6 +1564,20 @@ puppeteer@^5.3.1:
     tar-fs "^2.0.0"
     unbzip2-stream "^1.3.3"
     ws "^7.2.3"
+
+random-seed@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/random-seed/-/random-seed-0.3.0.tgz#d945f2e1f38f49e8d58913431b8bf6bb937556cd"
+  integrity sha1-2UXy4fOPSejViRNDG4v2u5N1Vs0=
+  dependencies:
+    json-stringify-safe "^5.0.1"
+
+random-useragent@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/random-useragent/-/random-useragent-0.5.0.tgz#83a92dfdfb2366972d0a1f81fc93d5ef85807ae8"
+  integrity sha512-FUMkqVdZeoSff5tErNL3FFGYXElDWZ1bEuedhm5u9MdCFwANriJWbHvDRYrLTOzp/fBsBGu5J1cWtDgifa97aQ==
+  dependencies:
+    random-seed "^0.3.0"
 
 readable-stream@^2.3.5:
   version "2.3.7"

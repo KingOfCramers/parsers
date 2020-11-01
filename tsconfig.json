@@ -4,6 +4,7 @@
     "outDir": "build",
     "module": "commonjs",
     "lib": [
+      "DOM",
       "ESNext",
       "ES2018",
       "ESNext.AsyncIterable"

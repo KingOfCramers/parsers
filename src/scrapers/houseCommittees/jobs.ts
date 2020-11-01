@@ -13,6 +13,14 @@ export interface HouseJob<Details> extends Job {
   details: Details;
 }
 
+export type HouseJobTypes =
+  | HouseJob<V1>
+  | HouseJob<V2>
+  | HouseJob<V3>
+  | HouseJob<V4>
+  | HouseJob<V5>
+  | HouseJob<V6>;
+
 // Reusable types
 type LabelSelector = { label: boolean; value: string };
 type InstanceSelector = { selector: string; instance: number };
