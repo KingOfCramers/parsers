@@ -55,4 +55,12 @@ export class BaseType {
     set: (date: string) => handleSetDate(date),
   })
   date: Date;
+
+  @Field()
+  @prop({
+    required: false,
+    get: (time) => time,
+    set: (time: string) => handleSetTime(time),
+  })
+  time?: Date;
 }
