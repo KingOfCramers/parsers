@@ -5,6 +5,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "install": "pipenv install",
     "dev:start": "nodemon",
     "dev:debug": "tsc && NODE_ENV=development node --inspect-brk build/index.js",
     "prod:build": "tsc",
