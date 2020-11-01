@@ -5,16 +5,21 @@ import { AnyParamConstructor } from "@typegoose/typegoose/lib/types";
 interface DataType {
   link: string;
 }
-// Accepts data and class, allows for saving to database
+interface GenericObject<T> {
+  [key: string]: T;
+}
+
+// Accepts class, creates model, allows for saving data
+// Data not passed upon initialization, pass into saveOrUpdate
 export class Saver<T extends DataType> {
   model: ReturnModelType<AnyParamConstructor<any>, {}>;
-  constructor(public data: T[], public dataClass: any) {
+  constructor(public dataClass: any) {
     const model = getModelForClass(dataClass);
     this.model = model;
   }
-  async saveOrUpdate(): Promise<void> {
-    console.log(`Saving documents for ${this.model.modelName}`);
-    const savedDocuments = this.data.map((datum) => {
+  async saveOrUpdate(data: T[]): Promise<void> {
+    console.log(`Touching database with ${this.model.modelName}`);
+    const savedDocuments = data.map((datum) => {
       return this.model.findOneAndUpdate({ link: datum.link }, datum, {
         new: true,
         upsert: true,
@@ -24,5 +29,14 @@ export class Saver<T extends DataType> {
     });
 
     await Promise.all(savedDocuments);
+  }
+
+  async findOne(query: GenericObject<string>): Promise<boolean> {
+    const doc = await this.model.findOne(query);
+    if (!doc) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }

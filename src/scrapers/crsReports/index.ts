@@ -22,6 +22,6 @@ export const crsReports = async () => {
       };
     });
 
-  const saver = new Saver<CrsReport>(data, CrsReport);
-  await saver.saveOrUpdate();
+  const saver = new Saver<CrsReport>(CrsReport);
+  await saver.saveOrUpdate(data);
 };

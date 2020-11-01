@@ -1,6 +1,6 @@
 import feedparser
 NewsFeed = feedparser.parse("https://www.everycrsreport.com/rss.xml")
-entries = NewsFeed.entries
+entries =NewsFeed.entries
 
 for entry in entries:
     print(entry["title"])

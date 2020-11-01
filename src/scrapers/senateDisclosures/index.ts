@@ -56,6 +56,7 @@ const parseData = ($: cheerio.Root): StockDisclosure[] => {
 };
 
 export const senateDisclosures = async (browser: puppeteer.Browser) => {
+  const saver = new Saver<StockDisclosure>(SenateStockDisclosure);
   const page = await browser.newPage();
   const html = await fetchContracts(
     "https://efdsearch.senate.gov/search/",
@@ -68,6 +69,5 @@ export const senateDisclosures = async (browser: puppeteer.Browser) => {
 
   const $ = cheerio.load(html);
   const data = parseData($);
-  const saver = new Saver<StockDisclosure>(data, SenateStockDisclosure);
-  await saver.saveOrUpdate();
+  await saver.saveOrUpdate(data);
 };

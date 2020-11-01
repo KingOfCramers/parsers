@@ -4,7 +4,8 @@ import typegoose from "@typegoose/typegoose";
 import axios, { AxiosResponse } from "axios";
 import util from "util";
 import { capitalize, clean, wait } from "../../util";
-import { StatePressReleaseModel, StatePressRelease } from "../../types";
+import { StatePressRelease } from "../../types";
+import { Saver } from "../../mongodb/Saver";
 
 const parseData = (link: string, $: cheerio.Root): StatePressRelease => {
   const title = $(".featured-content__headline")
@@ -41,32 +42,23 @@ const parseReleaseStrings = ($: cheerio.Root): string[] => {
   return links;
 };
 
-// 693 pages.
-//const pageNumbers = Array.from({ length: 243 }, (x, i) => i + 450);
 const pageNumbers = Array.from({ length: 693 }, (x, i) => i);
 
 export const statePressReleases = async () => {
+  const saver = new Saver<StatePressRelease>(StatePressRelease);
   for (const pageNumber of pageNumbers) {
     const link = `https://www.state.gov/press-releases/page/${pageNumber}/`;
     try {
-      // Get all sub-links that contain actual releases
       const response = await axios.get(link);
       const $ = cheerio.load(response.data);
       const links = parseReleaseStrings($);
       for (const sublink of links) {
         await wait(500);
-        //Get data from every sub-link
         try {
           const response = await axios.get(sublink);
           const $ = cheerio.load(response.data);
           const data = parseData(sublink, $);
-          // Save or update data
-          let doc = await StatePressReleaseModel.findOneAndUpdate(
-            { link: data.link },
-            { ...data },
-            { new: true, upsert: true }
-          );
-          console.log(`Saved or updated ${data.link}`);
+          saver.saveOrUpdate([data]);
         } catch (err) {
           console.error(err);
         }
@@ -78,29 +70,18 @@ export const statePressReleases = async () => {
 };
 
 export const getNewStatePressReleases = async () => {
-  const link = `https://www.state.gov/press-releases/page/0`;
-  // Get all sub-links that contain actual releases
+  const saver = new Saver<StatePressRelease>(StatePressRelease);
+  const link = `https://www.state.gov/press-releases/`;
   const response = await axios.get(link);
   const $ = cheerio.load(response.data);
   const links = parseReleaseStrings($);
   for (const sublink of links) {
-    // Check if the sublink is already stored.
-    const exists = StatePressReleaseModel.findOne({ link: sublink });
+    const exists = await saver.findOne({ link: sublink });
     if (!exists) {
-      try {
-        const response = await axios.get(sublink);
-        const $ = cheerio.load(response.data);
-        const data = parseData(sublink, $);
-        // Save or update data
-        let doc = await StatePressReleaseModel.findOneAndUpdate(
-          { link: data.link },
-          { ...data },
-          { new: true, upsert: true }
-        );
-        console.log(`Saved new file: ${data.link}`);
-      } catch (err) {
-        console.error(err);
-      }
+      const response = await axios.get(sublink);
+      const $ = cheerio.load(response.data);
+      const data = parseData(sublink, $);
+      await saver.saveOrUpdate([data]);
     }
   }
 };
