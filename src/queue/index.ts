@@ -55,15 +55,18 @@ export class QueueHandler<JobData, JobResult> {
         .save();
     }
   }
-  process(): void {
-    this.queue.process(async (job: Job, done: Queue.DoneCallback<null>) => {
-      console.log(`🟡 Processing ${this.jobName} with id ${job.id}`);
-      try {
-        await this.work(job.data);
-        done(null, null); // No error
-      } catch (err) {
-        done(err);
+  process(maxConcurrent?: number): void {
+    this.queue.process(
+      maxConcurrent ?? 1,
+      async (job: Job, done: Queue.DoneCallback<null>) => {
+        console.log(`🟡 Processing ${this.jobName} with id ${job.id}`);
+        try {
+          await this.work(job.data);
+          done(null, null); // No error
+        } catch (err) {
+          done(err);
+        }
       }
-    });
+    );
   }
 }
