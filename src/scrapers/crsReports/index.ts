@@ -4,7 +4,7 @@ import { Saver } from "../../mongodb/Saver";
 import { CrsReport, Report } from "../../types";
 import moment from "moment";
 
-export const crsReports = async () => {
+export const crsReports = async (): Promise<void> => {
   const res = await execShellCommand(
     "pipenv run python3",
     path.resolve(__dirname, "parser.py")

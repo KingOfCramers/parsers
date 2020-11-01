@@ -5,6 +5,7 @@ import { AnyParamConstructor } from "@typegoose/typegoose/lib/types";
 interface DataType {
   link: string;
 }
+
 interface GenericObject<T> {
   [key: string]: T;
 }
@@ -18,7 +19,6 @@ export class Saver<T extends DataType> {
     this.model = model;
   }
   async saveOrUpdate(data: T[]): Promise<void> {
-    console.log(`Touching database with ${this.model.modelName}`);
     const savedDocuments = data.map((datum) => {
       return this.model.findOneAndUpdate({ link: datum.link }, datum, {
         new: true,
@@ -28,7 +28,7 @@ export class Saver<T extends DataType> {
       });
     });
 
-    await Promise.all(savedDocuments);
+    const res = await Promise.all(savedDocuments);
   }
 
   async findOne(query: GenericObject<string>): Promise<boolean> {

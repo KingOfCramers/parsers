@@ -17,14 +17,17 @@
     "@types/mongoose": "^5.7.36",
     "@types/node": "^14.11.8",
     "@types/puppeteer": "^3.0.2",
+    "@types/redis": "^2.8.28",
     "@types/request": "^2.48.5",
     "axios": "^0.20.0",
+    "bee-queue": "^1.2.3",
     "cheerio": "^1.0.0-rc.3",
     "dotenv": "^8.2.0",
     "graphql": "^15.3.0",
     "moment": "^2.29.1",
     "mongoose": "^5.10.9",
     "puppeteer": "^5.3.1",
+    "redis": "^3.0.2",
     "type-graphql": "^1.0.0"
   },
   "devDependencies": {

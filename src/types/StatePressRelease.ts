@@ -3,7 +3,7 @@ import { getModelForClass, prop, post, pre } from "@typegoose/typegoose";
 import { BaseType } from "./BaseType";
 import mongoose from "mongoose";
 
-interface PressRelease extends BaseType {
+export interface PressRelease extends BaseType {
   title: string;
   authorBureau: string;
   kind: string;
@@ -13,7 +13,7 @@ interface PressRelease extends BaseType {
 
 // Used to query for committees
 @InputType()
-export class StatePressRelease extends BaseType {
+export class StatePressRelease extends BaseType implements PressRelease {
   @Field()
   @prop({ required: true })
   title: string;

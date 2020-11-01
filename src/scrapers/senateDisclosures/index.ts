@@ -7,6 +7,7 @@ import {
   StockDisclosure,
 } from "../../types/SenateStockDisclosure";
 import { Saver } from "../../mongodb/Saver";
+import { setupPuppeteer } from "../../puppeteer";
 
 const fetchContracts = async (
   url: string,
@@ -55,19 +56,25 @@ const parseData = ($: cheerio.Root): StockDisclosure[] => {
   return data;
 };
 
-export const senateDisclosures = async (browser: puppeteer.Browser) => {
-  const saver = new Saver<StockDisclosure>(SenateStockDisclosure);
-  const page = await browser.newPage();
-  const html = await fetchContracts(
-    "https://efdsearch.senate.gov/search/",
-    page
-  );
-  const pages = await browser.pages();
-  await Promise.all(
-    pages.map(async (page, i) => i > 0 && (await page.close()))
-  );
+export const senateDisclosures = async (): Promise<void> => {
+  const browser = await setupPuppeteer();
+  try {
+    const saver = new Saver<StockDisclosure>(SenateStockDisclosure);
+    const page = await browser.newPage();
+    const html = await fetchContracts(
+      "https://efdsearch.senate.gov/search/",
+      page
+    );
+    const pages = await browser.pages();
+    await Promise.all(
+      pages.map(async (page, i) => i > 0 && (await page.close()))
+    );
 
-  const $ = cheerio.load(html);
-  const data = parseData($);
-  await saver.saveOrUpdate(data);
+    const $ = cheerio.load(html);
+    const data = parseData($);
+    await saver.saveOrUpdate(data);
+    await browser.close();
+  } catch (err) {
+    await browser.close();
+  }
 };
