@@ -10,13 +10,17 @@ const handleCompleted = (job: Queue.Job, jobName: string): void => {
 };
 
 const handleFailed = (job: Queue.Job, err: Error, jobName: string): void => {
-  console.error(`❌ ${jobName} with id ${job.id} failed!`);
-  console.error(err.name);
-  console.error(err.message);
+  console.error(
+    `❌ ${jobName} with id ${job.id} failed! Reason: ${err.message}`
+  );
 };
 
 const handleReady = (jobName: string): void => {
   console.log(`🙇 ${jobName} ready for processing!`);
+};
+
+const handleStalled = (jobId: string, jobName: string): void => {
+  console.warn(`⌛ ${jobName} with ${jobId} stalled and will be retried!`);
 };
 
 export class QueueHandler<JobData, JobResult> {
@@ -38,6 +42,7 @@ export class QueueHandler<JobData, JobResult> {
     this.queue.on("succeeded", (job: Queue.Job) =>
       handleCompleted(job, jobName)
     );
+    this.queue.on("stalled", (jobId: string) => handleStalled(jobId, jobName));
   }
   queue: Queue;
 
