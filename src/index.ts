@@ -48,7 +48,7 @@ const runProgram = async () => {
       timeout: 5000,
     });
     await crsQueue.createJobs([{}], { retries: 1, timeout: 5000 });
-  }, 10000);
+  }, 1800000);
 
   crsQueue.process();
   statePressReleasesQueue.process();
