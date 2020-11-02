@@ -1,4 +1,10 @@
-# 🏛️ Cloture Scrapers
+# This project has been merged into Cloture's MonoRepo and is no longer maintained here!
+https://github.com/KingOfCramers/cloture/tree/master/packages/scrapers
+
+
+#### OLD ####
+
+## 🏛️ Cloture Scrapers
 
 These are the scrapers that feed data into Cloture's database. This project will be merged into the monorepo to replace the existing scrapers, which use BullJS instead of Bee-JS.
 
