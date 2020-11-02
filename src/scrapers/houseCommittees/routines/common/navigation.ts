@@ -1,7 +1,5 @@
-import path from "path";
 import randomUser from "random-useragent";
 import puppeteer from "puppeteer";
-import fs from "fs";
 import functions from "../common/functions";
 
 export const setPageBlockers = async (page: puppeteer.Page) => {

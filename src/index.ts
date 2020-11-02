@@ -1,13 +1,11 @@
 // Configure environment
-import path, { resolve } from "path";
+import { resolve } from "path";
 import dotenv from "dotenv";
 const environment = process.env.NODE_ENV;
 dotenv.config({ path: resolve(__dirname, `../.${environment}.env`) });
 
-import moment from "moment";
 import { connect } from "./mongodb/connect";
 import { configureRedis } from "./redis";
-import { setupPuppeteer } from "./puppeteer";
 import { QueueHandler } from "./queue";
 
 // Processes to run
@@ -19,20 +17,14 @@ import {
 } from "./scrapers";
 
 // Types of return data
-import {
-  Report,
-  CrsReport,
-  StockDisclosure,
-  PressRelease,
-  Committee,
-} from "./types";
+import { Report, StockDisclosure, PressRelease, Committee } from "./types";
 
 // Jobs + Types
 import { HouseJobTypes, house } from "./scrapers/houseCommittees/jobs";
 
 const runProgram = async () => {
   // Connect to our MongoDB database
-  const db = await connect();
+  await connect();
 
   // Configure Redis
   await configureRedis();

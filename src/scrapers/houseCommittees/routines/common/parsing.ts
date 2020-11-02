@@ -1,8 +1,19 @@
-//@ts-nocheck
 import puppeteer from "puppeteer";
 
+// Helper functions (for typescript checking...)
+import {
+  makeArrayFromDocument,
+  getFromText,
+  getLink,
+  getTextFromDocument,
+  getNextTextFromDocument,
+  getNthInstanceOfText,
+  getLinkText,
+  clean,
+} from "./functions";
+
 //// The main body of the scrapers
-import { V1, V2, V3, V4, V5, V6, RowsAndDepth } from "../../jobs";
+import { V1, V2, V3, V5, RowsAndDepth } from "../../jobs";
 
 type StringOrNull = string | null;
 export interface Result {
@@ -41,7 +52,6 @@ export const getLinks = async ({
   selectors,
 }: linkArgs): Promise<(string | null)[]> =>
   page.evaluate((selectors: RowsAndDepth) => {
-    boop();
     let rows = makeArrayFromDocument(selectors.rows);
     let links = rows.map((x) => getLink(x));
     return links.filter((x, i) => i + 1 <= selectors.depth && x); // Only return pages w/in depth
@@ -65,71 +75,67 @@ export const getPageData = async ({
 }: GetPageDataParams): Promise<Result[]> =>
   await Promise.all(
     pages.map(async (page) =>
-      page.evaluate(
-        (selectors: GetPageDataParams["selectors"]) => {
-          let link = document.URL;
-          let text = document.body.innerText.replace(/[\s,\t\,\n]+/g, " ");
-          let title = getTextFromDocument(selectors.title);
-          if (selectors.titleTrimRegex) {
-            let titleRegex = new RegExp(selectors.titleTrimRegex, "i");
-            title && title.replace(titleRegex, "");
-          }
+      page.evaluate((selectors: GetPageDataParams["selectors"]) => {
+        let link = document.URL;
+        let text = document.body.innerText.replace(/[\s,\t\,\n]+/g, " ");
+        let title = getTextFromDocument(selectors.title);
+        if (selectors.titleTrimRegex) {
+          let titleRegex = new RegExp(selectors.titleTrimRegex, "i");
+          title && title.replace(titleRegex, "");
+        }
 
-          if (selectors.location) {
-            var location = selectors.location.label
-              ? getNextTextFromDocument(selectors.location.value)
-              : getTextFromDocument(selectors.location.value);
-          } else {
-            var location: string | null = null;
-          }
+        if (selectors.location) {
+          var location = selectors.location.label
+            ? getNextTextFromDocument(selectors.location.value)
+            : getTextFromDocument(selectors.location.value);
+        } else {
+          var location: string | null = null;
+        }
 
-          // If date is merely "true" then search by Regex
-          if (typeof selectors.date === "boolean") {
-            let myDateRegex = new RegExp(
-              /(monday|tuesday|wednesday|thursday|friday|saturday|sunday)?,? ?(January|February|March|April|May|June|July|August|September|October|November|December) ([0-9][0-9]?),? \d\d\d\d/,
-              "gi"
-            );
-            let isMatch = document.body.innerText.match(myDateRegex);
-            var date = isMatch ? isMatch[0] : null;
-          } else {
-            var date = selectors.date.label
-              ? getNextTextFromDocument(selectors.date.value)
-              : getTextFromDocument(selectors.date.value);
-          }
+        // If date is merely "true" then search by Regex
+        if (typeof selectors.date === "boolean") {
+          let myDateRegex = new RegExp(
+            /(monday|tuesday|wednesday|thursday|friday|saturday|sunday)?,? ?(January|February|March|April|May|June|July|August|September|October|November|December) ([0-9][0-9]?),? \d\d\d\d/,
+            "gi"
+          );
+          let isMatch = document.body.innerText.match(myDateRegex);
+          var date = isMatch ? isMatch[0] : null;
+        } else {
+          var date = selectors.date.label
+            ? getNextTextFromDocument(selectors.date.value)
+            : getTextFromDocument(selectors.date.value);
+        }
 
-          // If time is merely "true" then search by Regex. If it's not boolean but exists, use label value
-          let time: string | null = null;
-          if (typeof selectors.time === "boolean") {
-            let myTimeRegex = new RegExp(
-              /((1[0-2]|0?[1-9])():([0-5][0-9]) ?([AaPp]\.?[Mm]\.?)?)|((1[0-2]|0?[1-9])().([0-5][0-9]) ([AaPp]\.?[Mm]\.))/
-            );
-            let isMatch = document.body.innerText.match(myTimeRegex);
-            time = isMatch ? isMatch[0] : null;
-          } else if (selectors.time) {
-            time = selectors.time.label
-              ? getNextTextFromDocument(selectors.time.value)
-              : getTextFromDocument(selectors.time.value);
-          }
+        // If time is merely "true" then search by Regex. If it's not boolean but exists, use label value
+        let time: string | null = null;
+        if (typeof selectors.time === "boolean") {
+          let myTimeRegex = new RegExp(
+            /((1[0-2]|0?[1-9])():([0-5][0-9]) ?([AaPp]\.?[Mm]\.?)?)|((1[0-2]|0?[1-9])().([0-5][0-9]) ([AaPp]\.?[Mm]\.))/
+          );
+          let isMatch = document.body.innerText.match(myTimeRegex);
+          time = isMatch ? isMatch[0] : null;
+        } else if (selectors.time) {
+          time = selectors.time.label
+            ? getNextTextFromDocument(selectors.time.value)
+            : getTextFromDocument(selectors.time.value);
+        }
 
-          // If data includes split date, reassign time + date
-          if (selectors.splitDate) {
-            time = date && clean(date.split(selectors.splitDate)[1]);
-            date = date && clean(date.split(selectors.splitDate)[0]);
-          }
+        // If data includes split date, reassign time + date
+        if (selectors.splitDate) {
+          time = date && clean(date.split(selectors.splitDate)[1]);
+          date = date && clean(date.split(selectors.splitDate)[0]);
+        }
 
-          return {
-            title,
-            date,
-            time,
-            location,
-            link,
-            text,
-          };
-        },
-        selectors,
-        getTextFromDocument,
-        getNextTextFromDocument
-      )
+        return {
+          title,
+          date,
+          time,
+          location,
+          link,
+          text,
+        };
+        //@ts-ignore
+      }, selectors)
     )
   );
 
@@ -146,6 +152,7 @@ export const getPageDataWithJQuery = async ({
       return page.evaluate(
         (selectors: GetPageDataWithJQueryInterface["selectors"]) => {
           let title = getTextFromDocument(selectors.title);
+          //@ts-ignore
           let info = $(selectors.jquerySelector)
             .contents()[1]
             .textContent.split("\n")
@@ -213,6 +220,7 @@ export const getLinksAndData = async ({
         }
         return { link, title, location, date, time };
       });
+    //@ts-ignore
   }, selectors);
 
 export const getLinksAndDatav2 = async ({

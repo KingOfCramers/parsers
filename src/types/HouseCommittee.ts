@@ -1,7 +1,6 @@
 import { InputType, Field } from "type-graphql";
 import { BaseType } from "./BaseType";
-import { getModelForClass, prop, post, pre } from "@typegoose/typegoose";
-import mongoose from "mongoose";
+import { prop } from "@typegoose/typegoose";
 
 export enum HouseCommittees {
   HOUSE_ARMED_SERVICES_COMMITTEE = "hasc",

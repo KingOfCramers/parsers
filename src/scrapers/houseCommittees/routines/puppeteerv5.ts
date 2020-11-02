@@ -6,9 +6,7 @@ import { HouseJob, V5 } from "../jobs";
 import {
   getLinks,
   getPageDataWithJQuery,
-  getPageText,
   openNewPages,
-  setPageBlockers,
   setInitialPage,
 } from "./common";
 

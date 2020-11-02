@@ -1,8 +1,6 @@
 import { InputType, Field } from "type-graphql";
 import { BaseType } from "./BaseType";
-import { getModelForClass, prop, post, pre } from "@typegoose/typegoose";
-import mongoose from "mongoose";
-import { Base } from "@typegoose/typegoose/lib/defaultClasses";
+import { prop } from "@typegoose/typegoose";
 
 export interface Report extends BaseType {
   title: string;

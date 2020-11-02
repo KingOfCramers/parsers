@@ -1,9 +1,7 @@
 import cheerio from "cheerio";
 import moment from "moment";
-import typegoose from "@typegoose/typegoose";
-import axios, { AxiosResponse } from "axios";
-import util from "util";
-import { capitalize, clean, wait } from "../../util";
+import axios from "axios";
+import { wait } from "../../util";
 import { StatePressRelease } from "../../types";
 import { Saver } from "../../mongodb/Saver";
 

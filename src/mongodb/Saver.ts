@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { getModelForClass, ReturnModelType } from "@typegoose/typegoose";
 import { AnyParamConstructor } from "@typegoose/typegoose/lib/types";
 
@@ -28,7 +27,7 @@ export class Saver<T extends DataType> {
       });
     });
 
-    const res = await Promise.all(savedDocuments);
+    await Promise.all(savedDocuments);
   }
 
   async findOne(query: GenericObject<string>): Promise<boolean> {

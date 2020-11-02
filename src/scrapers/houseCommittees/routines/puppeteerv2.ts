@@ -3,11 +3,9 @@ import puppeteer from "puppeteer";
 import {
   getLinksAndData,
   getPageText,
-  getLinks,
   setPageBlockers,
   setPageScripts,
   setInitialPage,
-  openNewPages,
 } from "./common";
 
 // Import job types
