@@ -1,8 +1,13 @@
 import puppeteer from "puppeteer";
 
 // Import common functions for all scrapers and for page-specific logic
-import { getPageData, getLinks } from "./common";
-import { setPageBlockers, setInitialPage, openNewPages } from "./navigation";
+import {
+  getPageData,
+  getLinks,
+  setPageBlockers,
+  setInitialPage,
+  openNewPages,
+} from "./common";
 
 import { HouseJob, V1 } from "../jobs";
 

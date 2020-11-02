@@ -1,7 +1,14 @@
 import puppeteer from "puppeteer";
 
-import { getLinksAndData, getPageText, getLinks } from "./common";
-import { setPageBlockers, setInitialPage, openNewPages } from "./navigation";
+import {
+  getLinksAndData,
+  getPageText,
+  getLinks,
+  setPageBlockers,
+  setPageScripts,
+  setInitialPage,
+  openNewPages,
+} from "./common";
 
 // Import job types
 import { HouseJob, V2 } from "../jobs";
@@ -28,6 +35,7 @@ export const puppeteerv2 = async (
       dataWithLinks.map(async (datum: any) => {
         let page = await browser.newPage();
         await setPageBlockers(page);
+        await setPageScripts(page);
         await page.goto(datum.link);
         let text = await getPageText(page);
         return { ...datum, text };

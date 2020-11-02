@@ -2,6 +2,7 @@ import path from "path";
 import randomUser from "random-useragent";
 import puppeteer from "puppeteer";
 import fs from "fs";
+import functions from "../common/functions";
 
 export const setPageBlockers = async (page: puppeteer.Page) => {
   await page.setRequestInterception(true);
@@ -61,23 +62,9 @@ export const setPageBlockers = async (page: puppeteer.Page) => {
 };
 
 // Add personal functions to the page.
-// These are then accessible within puppeteer. Since they're written in typescript
-// They are only accessible within the "built" version of the site.
-// Thus, check if the site has been built (when in development) and get that version.
-// If not, throw an error.
-export const setPageScripts = async (page: puppeteer.Page) => {
-  let consumerFunctionsPath = path.resolve(
-    __dirname,
-    "..",
-    "common",
-    "functions.js"
-  );
-  let consumerFunctionsExist = fs.existsSync(consumerFunctionsPath);
-  if (!consumerFunctionsExist) {
-    console.error("Utility function files do not exist!");
-    process.exit(1);
-  } else {
-    await page.addScriptTag({ path: consumerFunctionsPath }); // Uses path from CWD
+export const setPageScripts = async (page: puppeteer.Page): Promise<void> => {
+  for (const func of functions) {
+    await page.exposeFunction(func.name, func);
   }
 };
 
@@ -89,6 +76,7 @@ export const setInitialPage = async (
   let userAgentString = randomUser.getRandom();
   await page.setUserAgent(userAgentString || "");
   await setPageBlockers(page);
+  await setPageScripts(page);
   await page.goto(link);
   return page;
 };
@@ -101,6 +89,7 @@ export const openNewPages = async (browser: puppeteer.Browser, links: any) => {
     pages.map(async (page, i) => {
       try {
         await setPageBlockers(page);
+        await setPageScripts(page);
         await page.goto(links[i]);
         return Promise.resolve({ page, err: null, link: null });
       } catch (err) {

@@ -3,8 +3,12 @@ import puppeteer from "puppeteer";
 // Import job types
 import { HouseJob, V6 } from "../jobs";
 
-import { getPageData, getLinksFiltered } from "./common";
-import { setInitialPage, openNewPages } from "./navigation";
+import {
+  getPageData,
+  getLinksFiltered,
+  setInitialPage,
+  openNewPages,
+} from "./common";
 
 export const puppeteerv6 = async (
   browser: puppeteer.Browser,
