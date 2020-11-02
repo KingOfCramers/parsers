@@ -20,7 +20,7 @@ import {
 import { Report, StockDisclosure, PressRelease, Committee } from "./types";
 
 // Jobs + Types
-import { HouseJobTypes, house } from "./scrapers/houseCommittees/jobs";
+import { HouseJobTypes, houseJobs } from "./scrapers/houseCommittees/jobs";
 
 const runProgram = async () => {
   // Connect to our MongoDB database
@@ -29,45 +29,41 @@ const runProgram = async () => {
   // Configure Redis
   await configureRedis();
 
-  // Types: Type of data needed for job, expected return value from one job. Arguments: Job name (string) and function to run
-  const crsQueue = new QueueHandler<{}, Report>(
+  // Accepts return type and an optional shape for the data passed into each job.
+  const crsQueue = new QueueHandler<Report>(
     "congressionalResearchReports",
     crsReports
   );
 
-  const senateDisclosureQueue = new QueueHandler<{}, StockDisclosure>(
+  const senateDisclosureQueue = new QueueHandler<StockDisclosure>(
     "senateDisclosures",
     senateDisclosures
   );
 
-  const statePressReleasesQueue = new QueueHandler<{}, PressRelease>(
+  const statePressReleasesQueue = new QueueHandler<PressRelease>(
     "statePressReleases",
     getNewStatePressReleases
   );
 
-  const houseCommitteeQueue = new QueueHandler<HouseJobTypes, Committee>(
+  const houseCommitteeQueue = new QueueHandler<Committee, HouseJobTypes>(
     "houseCommittees",
     houseCommittees
   );
 
   // Create more jobs every half hour...
   setInterval(async () => {
-    await senateDisclosureQueue.createJobs([{}], { retries: 1, timeout: 7500 });
-    await statePressReleasesQueue.createJobs([{}], {
-      retries: 1,
-      timeout: 5000,
-    });
-    await crsQueue.createJobs([{}], { retries: 1, timeout: 5000 });
-    await houseCommitteeQueue.createJobs([...house], {
-      retries: 1,
-      timeout: 15000,
-    });
+    await senateDisclosureQueue.createJobs({ retries: 1, timeout: 10000 });
+    await statePressReleasesQueue.createJobs({ retries: 1, timeout: 10000 });
+    await crsQueue.createJobs({ retries: 1, timeout: 10000 });
+    await houseCommitteeQueue.createJobs({ retries: 1, timeout: 20000 }, [
+      ...houseJobs,
+    ]);
   }, 5000);
 
-  //crsQueue.process();
-  //statePressReleasesQueue.process();
-  //senateDisclosureQueue.process();
-  houseCommitteeQueue.process();
+  crsQueue.process();
+  statePressReleasesQueue.process();
+  senateDisclosureQueue.process();
+  //houseCommitteeQueue.process();
 };
 
 runProgram();

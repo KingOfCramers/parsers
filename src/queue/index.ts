@@ -23,7 +23,8 @@ const handleStalled = (jobId: string, jobName: string): void => {
   console.warn(`⌛ ${jobName} with ${jobId} stalled and will be retried!`);
 };
 
-export class QueueHandler<JobData, JobResult> {
+type BlankObj = { [key: string]: any };
+export class QueueHandler<JobResult, JobData = BlankObj> {
   constructor(
     public jobName: string,
     public work: (data: JobData) => Promise<void>
@@ -46,13 +47,21 @@ export class QueueHandler<JobData, JobResult> {
   }
   queue: Queue;
 
-  async createJobs(jobs: JobData[], opts: JobOptions): Promise<void> {
-    for (const job of jobs) {
+  async createJobs(opts: JobOptions, jobs?: JobData[]): Promise<void> {
+    if (!jobs) {
       await this.queue
-        .createJob(job)
+        .createJob(null)
         .timeout(opts.timeout)
         .retries(opts.retries)
         .save();
+    } else {
+      for (const job of jobs) {
+        await this.queue
+          .createJob(job)
+          .timeout(opts.timeout)
+          .retries(opts.retries)
+          .save();
+      }
     }
   }
   process(maxConcurrent?: number): void {

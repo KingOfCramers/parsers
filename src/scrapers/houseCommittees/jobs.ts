@@ -710,7 +710,7 @@ const clmt: HouseJob<V2> = jobCreator(
   }
 );
 
-export const house: (
+export const houseJobs: (
   | HouseJob<V1>
   | HouseJob<V2>
   | HouseJob<V4>
