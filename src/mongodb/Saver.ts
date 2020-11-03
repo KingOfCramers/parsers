@@ -1,5 +1,5 @@
-import { getModelForClass, ReturnModelType } from "@typegoose/typegoose";
-import { AnyParamConstructor } from "@typegoose/typegoose/lib/types";
+import mongoose from "mongoose";
+import { getModelForClass } from "@typegoose/typegoose";
 
 interface DataType {
   link: string;
@@ -12,26 +12,27 @@ interface GenericObject<T> {
 // Accepts class, creates model, allows for saving data
 // Data not passed upon initialization, pass into saveOrUpdate
 export class Saver<T extends DataType> {
-  model: ReturnModelType<AnyParamConstructor<any>, {}>;
   constructor(public dataClass: any) {
-    const model = getModelForClass(dataClass);
-    this.model = model;
+    this.Model = getModelForClass(dataClass);
   }
+  Model: any;
   async saveOrUpdate(data: T[]): Promise<void> {
-    const savedDocuments = data.map((datum) => {
-      return this.model.findOneAndUpdate({ link: datum.link }, datum, {
-        new: true,
-        upsert: true,
-        rawResult: true, // Return the raw result from the MongoDB driver
-        useFindAndModify: false,
-      });
-    });
-
-    await Promise.all(savedDocuments);
+    for (const datum of data) {
+      const exists = await this.Model.exists({ link: datum.link });
+      if (!exists) {
+        const doc: mongoose.Document = new this.Model(datum);
+        doc.save();
+      } else {
+        await this.Model.findOneAndUpdate({ link: datum.link }, datum, {
+          passRawResult: true,
+          useFindAndModify: false,
+        });
+      }
+    }
   }
 
   async findOne(query: GenericObject<string>): Promise<boolean> {
-    const doc = await this.model.findOne(query);
+    const doc = await this.Model.findOne(query);
     if (!doc) {
       return false;
     } else {

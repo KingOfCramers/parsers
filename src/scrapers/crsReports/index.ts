@@ -10,8 +10,8 @@ export const crsReports = async (): Promise<void> => {
     path.resolve(__dirname, "parser.py")
   );
 
-  let rows: string[][] = chunk(4, res.split("\n"));
-  let data: Report[] = rows
+  const rows: string[][] = chunk(4, res.split("\n"));
+  const data: Report[] = rows
     .filter((x) => x.length === 4)
     .map((item) => {
       return {

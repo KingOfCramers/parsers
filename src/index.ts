@@ -23,10 +23,7 @@ import { Report, StockDisclosure, PressRelease, Committee } from "./types";
 import { HouseJobTypes, houseJobs } from "./scrapers/houseCommittees/jobs";
 
 const runProgram = async () => {
-  // Connect to our MongoDB database
   await connect();
-
-  // Configure Redis
   await configureRedis();
 
   // Accepts return type and an optional shape for the data passed into each job.
@@ -59,20 +56,20 @@ const runProgram = async () => {
       await houseCommitteeQueue.createJobs({ retries: 1, timeout: 20000 }, [
         ...houseJobs,
       ]);
-    }, 5000);
+    }, 1800000);
   } else {
-    //await senateDisclosureQueue.createJobs({ retries: 1, timeout: 10000 });
-    //await statePressReleasesQueue.createJobs({ retries: 1, timeout: 10000 });
-    //await crsQueue.createJobs({ retries: 1, timeout: 10000 });
+    await senateDisclosureQueue.createJobs({ retries: 1, timeout: 10000 });
+    await statePressReleasesQueue.createJobs({ retries: 1, timeout: 10000 });
+    await crsQueue.createJobs({ retries: 1, timeout: 10000 });
     await houseCommitteeQueue.createJobs({ retries: 1, timeout: 20000 }, [
       ...houseJobs,
     ]);
   }
 
   crsQueue.process();
-  statePressReleasesQueue.process();
-  senateDisclosureQueue.process();
-  houseCommitteeQueue.process();
+  //statePressReleasesQueue.process();
+  //senateDisclosureQueue.process();
+  //houseCommitteeQueue.process();
 };
 
 runProgram();

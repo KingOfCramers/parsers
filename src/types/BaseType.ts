@@ -18,16 +18,6 @@ const handleSetTime = (date: string): Date =>
 @pre<Base>("save", function (next) {
   const document: mongoose.Document & any = this;
   document.wasNew = document.isNew; // Pass "newness" as new property for post-save
-  if (!document.isNew) {
-    const modifiedPaths = document.modifiedPaths();
-    if (modifiedPaths.length > 0) {
-      modifiedPaths.forEach((path: string) => {
-        console.log(
-          `${document.id} ${path} ––> ${JSON.stringify(document[path])}`
-        );
-      });
-    }
-  }
   next();
 })
 @post<Base>("save", function (
@@ -35,13 +25,19 @@ const handleSetTime = (date: string): Date =>
   doc: mongoose.Document,
   next: any
 ) {
-  console.log("Document could not save: ", err.message);
+  console.log("📄 Document could not save: ", err.message);
   next();
 })
 @post<Base>("save", function (doc: mongoose.Document & any, next) {
   if (doc.wasNew) {
-    console.log(`Document saved with id ${doc._id}`);
+    console.log(`📄 Document saved with id ${doc._id}`);
   }
+})
+@post<Base>("findOneAndUpdate", function (doc) {
+  // This post-hook could be used to check whether a value has been updated.
+  // To do this, we'd have to somehow compare the new values with the old values.
+  // Currently, this is getting the old document back (by default).
+  //const docOldValue = doc;
 })
 export class BaseType {
   @Field()
