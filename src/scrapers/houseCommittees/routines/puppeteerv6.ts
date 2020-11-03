@@ -1,30 +1,24 @@
 import puppeteer from "puppeteer";
 
-// Import job types
+import { getPageData, getLinksFiltered, openNewPages } from "./common";
 import { HouseJob, V6 } from "../jobs";
-
-import {
-  getPageData,
-  getLinksFiltered,
-  setInitialPage,
-  openNewPages,
-} from "./common";
 
 export const puppeteerv6 = async (
   browser: puppeteer.Browser,
+  page: puppeteer.Page,
   job: HouseJob<V6>
 ) => {
-  // Setup puppeteer page for the job
-  const page: puppeteer.Page = await setInitialPage(browser, job.link);
+  await page.goto(job.link);
 
-  let links;
-  let pages;
+  let links: (string | null)[];
+  let pages: puppeteer.Page[] | null;
   let pageData;
 
   try {
     links = await getLinksFiltered({
       page,
       selectors: job.details.layerOne,
+      origin: job.origin,
     });
   } catch (err) {
     console.error("Could not get links. ", err);
@@ -49,7 +43,7 @@ export const puppeteerv6 = async (
   }
 
   try {
-    let pages = await browser.pages();
+    const pages = await browser.pages();
     await Promise.all(
       pages.map(async (page, i) => i > 0 && (await page.close()))
     );

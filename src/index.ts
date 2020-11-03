@@ -51,19 +51,28 @@ const runProgram = async () => {
   );
 
   // Create more jobs every half hour...
-  setInterval(async () => {
-    await senateDisclosureQueue.createJobs({ retries: 1, timeout: 10000 });
-    await statePressReleasesQueue.createJobs({ retries: 1, timeout: 10000 });
-    await crsQueue.createJobs({ retries: 1, timeout: 10000 });
+  if (process.env.NODE_ENV === "production") {
+    setInterval(async () => {
+      await senateDisclosureQueue.createJobs({ retries: 1, timeout: 10000 });
+      await statePressReleasesQueue.createJobs({ retries: 1, timeout: 10000 });
+      await crsQueue.createJobs({ retries: 1, timeout: 10000 });
+      await houseCommitteeQueue.createJobs({ retries: 1, timeout: 20000 }, [
+        ...houseJobs,
+      ]);
+    }, 5000);
+  } else {
+    //await senateDisclosureQueue.createJobs({ retries: 1, timeout: 10000 });
+    //await statePressReleasesQueue.createJobs({ retries: 1, timeout: 10000 });
+    //await crsQueue.createJobs({ retries: 1, timeout: 10000 });
     await houseCommitteeQueue.createJobs({ retries: 1, timeout: 20000 }, [
       ...houseJobs,
     ]);
-  }, 5000);
+  }
 
   crsQueue.process();
   statePressReleasesQueue.process();
   senateDisclosureQueue.process();
-  //houseCommitteeQueue.process();
+  houseCommitteeQueue.process();
 };
 
 runProgram();

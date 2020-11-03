@@ -1,10 +1,7 @@
 import cheerio from "cheerio";
 import puppeteer from "puppeteer";
 import { capitalize, clean, wait } from "../../util";
-import {
-  SenateStockDisclosure,
-  StockDisclosure,
-} from "../../types/SenateStockDisclosure";
+import { SenateStockDisclosure, StockDisclosure } from "../../types";
 import { Saver } from "../../mongodb/Saver";
 import { setupPuppeteer } from "../../puppeteer";
 
